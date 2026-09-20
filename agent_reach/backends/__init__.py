@@ -2,8 +2,8 @@
 """Cross-channel backends.
 
 A backend here is an upstream runtime that serves MULTIPLE channels
-(e.g. OpenCLI covers xiaohongshu/reddit/bilibili/twitter through one
-browser session), as opposed to the per-platform tools probed inside
+(e.g. OpenCLI can serve multiple retained social platforms through one
+user-controlled browser session), as opposed to the per-platform tools probed inside
 each channel file.
 """
 
