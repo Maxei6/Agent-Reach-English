@@ -146,7 +146,7 @@ class Config:
 
         loaded = yaml.safe_load(payload) or {}
         if not isinstance(loaded, dict):
-            raise ConfigError("config file顶层必须是对象")
+            raise ConfigError("config file top level must be an object")
         self.data = loaded
 
     def save(self):
