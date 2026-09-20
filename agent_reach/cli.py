@@ -558,27 +558,6 @@ def _cmd_skill(args):
 
 
 
-    """Clean and format platform API output from stdin."""
-    import json
-    import sys
-
-    if args.platform == "xhs":
-        from agent_reach.channels.xiaohongshu import format_xhs_result
-
-        raw = sys.stdin.read().strip()
-        if not raw:
-            print("Error: no input on stdin", file=sys.stderr)
-            sys.exit(1)
-        try:
-            data = json.loads(raw)
-        except json.JSONDecodeError as e:
-            print(f"Error: invalid JSON: {e}", file=sys.stderr)
-            sys.exit(1)
-
-        cleaned = format_xhs_result(data)
-        print(json.dumps(cleaned, ensure_ascii=False, indent=2))
-
-
 def _install_system_deps():
     """Install system dependencies through an existing OS package manager."""
     import platform
@@ -821,61 +800,11 @@ def _install_system_deps():
                     "(YouTube may not work)"
                 )
 
-    # NOTE: twitter-cli, xiaoyuzhou, xhs-cli etc. are optional.
+    # Platform-specific CLIs are optional and installed via --channels.
     # They are installed via --channels flag, not here.
     # See CHANNEL_INSTALLERS in _cmd_install().
     return system_install_ok
 
-
-
-    """Install Xiaoyuzhou podcast transcription script."""
-    import shutil
-
-    from agent_reach.config import Config
-    from agent_reach.utils.paths import PrivatePathError, atomic_write_private_text
-
-    config = Config()
-    print("Setting up Xiaoyuzhou podcast transcription...")
-
-    tools_dir = os.path.expanduser("~/.agent-reach/tools/xiaoyuzhou")
-    script_dst = os.path.join(tools_dir, "transcribe.sh")
-
-    script_src = os.path.join(
-        os.path.dirname(__file__),
-        "scripts",
-        "transcribe_xiaoyuzhou.sh",
-    )
-    script_ok = False
-    if os.path.isfile(script_src):
-        existed = os.path.isfile(script_dst)
-        try:
-            with open(script_src, encoding="utf-8") as source:
-                script_text = source.read()
-            atomic_write_private_text(script_dst, script_text)
-            os.chmod(script_dst, 0o700)
-            action = "updated" if existed else "installed"
-            print(f"  ✅ Xiaoyuzhou transcription script {action}")
-            script_ok = True
-        except (OSError, UnicodeError, PrivatePathError) as exc:
-            print(f"  [!]  Failed to install script: {exc}")
-    else:
-        print("  [!]  Script source not found in package")
-
-    # Check ffmpeg
-    ffmpeg_ok = bool(shutil.which("ffmpeg"))
-    if ffmpeg_ok:
-        print("  ✅ ffmpeg available")
-    else:
-        print("  -- ffmpeg not found. Install: apt install -y ffmpeg (or brew install ffmpeg)")
-
-    # Check GROQ_API_KEY
-    has_key = bool(os.environ.get("GROQ_API_KEY")) or bool(config.get("groq_api_key"))
-    if has_key:
-        print("  ✅ Groq API key configured")
-    else:
-        print("  -- Groq API key not set. Get free key at https://console.groq.com")
-        print("     Then run: agent-reach configure groq-key")
-    return script_ok and ffmpeg_ok
 
 
 def _install_twitter_deps():
@@ -906,74 +835,6 @@ def _install_twitter_deps():
     print("  [!]  twitter-cli install failed. Run: pipx install twitter-cli")
     return False
 
-
-
-    """Install the strict-CDP boss-agent-cli build required by the Boss channel.
-
-    Upstream boss-agent-cli PRs #403-#407 are all merged into master; the source is
-    pinned to a fixed upstream commit containing those five PRs. Force-installing is
-    intentional: PyPI 1.18.0 exposes the ``boss`` executable but lacks the public
-    strict-CDP APIs required by this channel.
-    """
-    import shutil
-    import subprocess
-
-    print("Setting up Boss直聘 (boss-agent-cli upstream pinned commit)...")
-    for tool, args in [
-        ("pipx", ["install", "--force", _BOSS_AGENT_CLI_SOURCE]),
-        ("uv", ["tool", "install", "--force", _BOSS_AGENT_CLI_SOURCE]),
-    ]:
-        tool_cmd = shutil.which(tool)
-        if not tool_cmd:
-            continue
-        try:
-            result = subprocess.run(
-                [tool_cmd, *args],
-                capture_output=True,
-                encoding="utf-8",
-                errors="replace",
-                timeout=300,
-            )
-            if result.returncode == 0 and shutil.which("boss"):
-                print("  ✅ boss-agent-cli installed from pinned upstream commit")
-                print("  下一步：启动专用 Chrome, 由用户手动登录 zhipin.com, 再运行 agent-reach doctor")
-                return True
-        except (OSError, subprocess.TimeoutExpired):
-            pass
-
-    print("  [!]  boss-agent-cli install failed. Install pipx or uv, then retry:")
-    print(f"       pipx install --force '{_BOSS_AGENT_CLI_SOURCE}'")
-    return False
-
-
-
-    """Set up XiaoHongShu — backend depends on environment.
-
-    Desktop: OpenCLI (reuses the browser session, zero config).
-    Server: xiaohongshu-mcp guide with an explicit Cookie-Editor export;
-    we don't manage long-running services, so guide only.
-    xhs-cli is no longer installed by default — upstream unmaintained
-    since 2026-03; existing installs keep working as a fallback backend.
-    """
-    import shutil
-
-    print("Setting up XiaoHongShu...")
-    if _detect_environment() == "server":
-        print("  服务器环境推荐 xiaohongshu-mcp：")
-        print("    1. 下载 binary：https://github.com/xpzouying/xiaohongshu-mcp/releases")
-        print("       (建议放到 ~/.agent-reach/tools/ 下)")
-        print("    2. 启动服务(首次运行会下载约 150MB 浏览器, 请等待完成)")
-        print("    3. 用 Cookie-Editor 从 xiaohongshu.com 明确导出 Cookie")
-        print("       agent-reach configure xhs-cookies(粘贴到隐藏输入提示)")
-        print("    4. 接入：mcporter config add xiaohongshu http://localhost:18060/mcp --scope home")
-        print("    5. 验证：agent-reach doctor")
-        return False
-
-    opencli_ok = _install_opencli_deps()
-    xhs_ok = bool(shutil.which("xhs"))
-    if xhs_ok:
-        print("  ✅ 检测到存量 xhs-cli, 将作为备选后端继续可用")
-    return opencli_ok or xhs_ok
 
 
 def _install_opencli_deps():
@@ -1078,34 +939,6 @@ def _install_rdt_cli():
     print(f"  [!]  rdt-cli install failed. Run: pipx install '{_RDT_GIT_SOURCE}'")
     return False
 
-
-
-    """Install bili-cli for Bilibili hot/rank/search."""
-    import shutil
-    import subprocess
-
-    print("Setting up Bilibili (bili-cli)...")
-    if shutil.which("bili"):
-        print("  ✅ bili-cli already installed")
-        return True
-    for tool, args in [
-        ("pipx", ["install", "bilibili-cli"]),
-        ("uv", ["tool", "install", "bilibili-cli"]),
-    ]:
-        tool_cmd = shutil.which(tool)
-        if tool_cmd:
-            try:
-                result = subprocess.run(
-                    [tool_cmd, *args], capture_output=True, encoding="utf-8",
-                    errors="replace", timeout=120,
-                )
-                if result.returncode == 0 and shutil.which("bili"):
-                    print("  ✅ bili-cli installed")
-                    return True
-            except (OSError, subprocess.TimeoutExpired):
-                pass
-    print("  [!]  bili-cli install failed. Run: pipx install bilibili-cli")
-    return False
 
 
 def _install_system_deps_safe():
@@ -1238,7 +1071,6 @@ def _install_mcporter():
         print("  [!]  Could not configure Exa. Run manually: mcporter config add exa https://mcp.exa.ai/mcp --scope home")
         return False
 
-    # NOTE: xhs-cli is now optional, installed via --channels=xiaohongshu
 
 
 def _install_mcporter_safe():
@@ -1870,8 +1702,8 @@ def _cmd_check_update():
     from agent_reach import __version__
 
     print(f"Current version: v{__version__}")
-    release_url = "https://api.github.com/repos/Panniantong/Agent-Reach/releases/latest"
-    commit_url = "https://api.github.com/repos/Panniantong/Agent-Reach/commits/main"
+    release_url = "https://api.github.com/repos/Maxei6/Agent-Reach-English/releases/latest"
+    commit_url = "https://api.github.com/repos/Maxei6/Agent-Reach-English/commits/main"
 
     # Fetch latest release with retry/backoff.
     resp, err, attempts = _github_get_with_retry(release_url, timeout=10, retries=3)
@@ -1956,7 +1788,7 @@ def _cmd_watch():
     new_version = ""
     release_body = ""
     resp, err, _attempts = _github_get_with_retry(
-        "https://api.github.com/repos/Panniantong/Agent-Reach/releases/latest",
+        "https://api.github.com/repos/Maxei6/Agent-Reach-English/releases/latest",
         timeout=10,
         retries=2,
     )
