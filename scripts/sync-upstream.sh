@@ -3,9 +3,9 @@
 #
 # Usage: ./scripts/sync-upstream.sh
 #
-# This script checks for updates in x-reader's fetchers/ directory
-# and shows which files have changed. You can then manually review
-# and merge the changes.
+# This script checks for updates in x-reader's fetchers/ directory and shows
+# which retained international channel files have changed. It intentionally
+# ignores channels excluded from this fork. Manually review every merge.
 
 set -e
 
@@ -39,10 +39,18 @@ echo ""
 CHANGES=0
 for upstream_file in "$TMPDIR/upstream/$UPSTREAM_DIR"/*.py; do
     filename=$(basename "$upstream_file")
+
+    case "$filename" in
+        bilibili.py|boss.py|v2ex.py|xiaohongshu.py|xiaoyuzhou.py|xueqiu.py)
+            echo "⏭️  SKIP: $filename (outside the English/international fork scope)"
+            continue
+            ;;
+    esac
+
     local_file="$LOCAL_DIR/$filename"
     
     if [ ! -f "$local_file" ]; then
-        echo "🆕 NEW: $filename (exists in upstream but not locally)"
+        echo "🆕 NEW: $filename (review manually before adding; international scope still applies)"
         CHANGES=$((CHANGES + 1))
         continue
     fi
