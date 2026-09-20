@@ -83,7 +83,7 @@ def format_report(results: Dict[str, dict]) -> str:
     tier1_inactive = {k: r for k, r in tier1.items() if r["status"] != "ok"}
     if tier1_active:
         lines.append("")
-        lines.append("[bold]可选渠道（已安装)：[/bold]")
+        lines.append("[bold]Optional channels (installed):[/bold]")
         for key, r in tier1_active.items():
             lines.append(f"  [green]✅[/green] {_name_msg(r, escape)}")
 
@@ -94,7 +94,7 @@ def format_report(results: Dict[str, dict]) -> str:
     if tier2_active:
         if not tier1_active:
             lines.append("")
-            lines.append("[bold]可选渠道（已安装)：[/bold]")
+            lines.append("[bold]Optional channels (installed):[/bold]")
         for key, r in tier2_active.items():
             lines.append(f"  [green]✅[/green] {_name_msg(r, escape)}")
 
@@ -122,7 +122,7 @@ def format_report(results: Dict[str, dict]) -> str:
             if mode & (stat.S_IRGRP | stat.S_IROTH):
                 lines.append("")
                 lines.append(
-                    "[bold red][!]  安全提示：config.yaml 权限过宽（其他用户可读)[/bold red]"
+                    "[bold red][!] Security warning: config.yaml permissions are too broad (readable by other users)[/bold red]"
                 )
                 lines.append("   Fix: chmod 600 ~/.agent-reach/config.yaml")
         except OSError:
