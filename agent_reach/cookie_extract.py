@@ -198,7 +198,7 @@ def extract_all(
     all-platform read is intentionally no longer supported.
 
     Returns:
-        {"xueqiu": {"xq_a_token": "xxx"}}
+        {"twitter": {"auth_token": "xxx", "ct0": "yyy"}}
     """
     spec = _platform_spec(platform)
     _require_browser_extractable(spec)
