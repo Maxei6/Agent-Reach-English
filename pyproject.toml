@@ -1,7 +1,7 @@
 [project]
 name = "agent-reach"
 version = "1.5.0"
-description = "Give your AI Agent eyes to see the entire internet. Search + Read 10+ platforms."
+description = "English-first internet capability router for AI agents. Search and read global web, social, developer, video, and RSS sources."
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
@@ -10,7 +10,6 @@ keywords = [
     "ai-agent", "llm-tools", "agent-infrastructure", "mcp",
     "web-reader", "web-scraper", "search",
     "twitter-scraper", "reddit-scraper", "youtube-transcript",
-    "bilibili", "xiaohongshu",
     "ai-search", "cli", "automation",
     "claude-code", "cursor", "openai",
     "free-api", "no-api-key",
@@ -53,9 +52,9 @@ dev = [
 agent-reach = "agent_reach.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/Panniantong/agent-reach"
-Repository = "https://github.com/Panniantong/agent-reach"
-Issues = "https://github.com/Panniantong/agent-reach/issues"
+Homepage = "https://github.com/Maxei6/Agent-Reach-English"
+Repository = "https://github.com/Maxei6/Agent-Reach-English"
+Issues = "https://github.com/Maxei6/Agent-Reach-English/issues"
 
 [build-system]
 requires = ["hatchling"]
