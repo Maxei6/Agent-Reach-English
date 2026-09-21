@@ -20,8 +20,9 @@ agent-reach skill --install
 agent-reach doctor --json
 ```
 
-Refreshing the skill is important because this fork's purpose is to keep the
-agent-facing instructions English-only.
+Refreshing the skill is mandatory during migration because it replaces Agent Reach in every known skill root that already exists (Agent, OpenCode, OpenClaw, Claude Code, plus OPENCLAW_HOME when configured).
+
+Before updating, identify the active executable and common package locations with `command -v agent-reach`, `pipx list`, and `python -m pip show agent-reach`. Preserve `~/.agent-reach/`. Do not recursively remove unknown virtual environments; report stale copies that cannot be positively identified instead.
 
 Do not update from `Panniantong/Agent-Reach` unless the user explicitly wants
 to switch back to the upstream edition.

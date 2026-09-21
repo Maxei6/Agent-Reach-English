@@ -98,7 +98,7 @@ def main():
     p_conf.add_argument("key", nargs="?", default=None,
                         choices=["proxy", "github-token", "groq-key", "openai-key",
                                   "twitter-cookies", "youtube-cookies"],
-                        help="What to configure (omit if using --from-browser)")
+                        help="What to configure")
     p_conf.add_argument("value", nargs="*", help="The value(s) to set")
     p_conf.add_argument(
         "--stdin",
@@ -421,7 +421,7 @@ def _install_skill(force: bool = True):
         return skill_pkg.joinpath("SKILL.md").read_text(encoding="utf-8")
 
     def _copy_skill_dir(target: str) -> str | None:
-        """Copy entire skill directory (locale-specific SKILL.md + references/)."""
+        """Copy the bundled English skill directory (SKILL.md + references/)."""
         try:
             if not force and os.path.exists(os.path.join(target, "SKILL.md")):
                 return "preserved"
@@ -1779,9 +1779,9 @@ def _cmd_watch():
     # Find broken channels (were working, now broken)
     for key, r in results.items():
         if r["status"] in ("off", "error"):
-            issues.append(f"[X] {r['name']}：{r['message']}")
+            issues.append(f"[X] {r['name']}: {r['message']}")
         elif r["status"] == "warn":
-            issues.append(f"[!] {r['name']}：{r['message']}")
+            issues.append(f"[!] {r['name']}: {r['message']}")
 
     # Check for updates
     update_available = False

@@ -1,41 +1,49 @@
-# Agent Reach — English / International Edition
+<p align="center">\n  <img src="docs/assets/agent-reach-social-preview.jpg" alt="Agent Reach — English / International Edition" width="100%">\n</p>\n\n# 🌐 Agent Reach — English / International Edition
 
-> Give your AI agent reliable read/search access to the public internet using a small capability layer that installs, routes, and health-checks upstream tools.
+> **Give your AI agent reliable eyes on the public internet.**  
+> Search, read, route, and health-check global web sources with one lightweight capability layer.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](pyproject.toml)
+[![International Edition](https://img.shields.io/badge/Edition-English%20%2F%20International-2ea44f.svg)](#-why-this-fork-exists)
 
 This repository is an **English-only, international-focused derivative of [Agent Reach](https://github.com/Panniantong/Agent-Reach)**.
 
-## Why this fork exists
+## ✨ Why this fork exists
 
-The upstream project is useful, but a significant amount of its agent-facing skill text, diagnostics, and documentation is written in Chinese. That matters when an AI agent loads `SKILL.md` directly into context: the instructions the agent reasons over should be in the same working language as the rest of the agent stack.
+The upstream project is useful, but a significant amount of its agent-facing skill text, diagnostics, and documentation is written in Chinese. That matters when an AI agent loads `SKILL.md` directly into context.
 
-This fork therefore has a deliberately narrow goal:
+This edition keeps the useful Agent Reach architecture while making the maintained agent experience clean and international:
 
-- keep the core Agent Reach architecture and drop-in `agent-reach` CLI;
-- make agent-facing instructions, CLI output, documentation, and maintained tests English-only;
-- keep broadly useful international platforms;
-- remove integrations that are primarily specific to the Chinese market;
-- stay easy to replace/update from GitHub without changing existing agent workflows.
+- 🇬🇧 **English-only** agent skills, diagnostics, docs, and maintained tests
+- 🌍 **International platform focus**
+- 🔁 Keeps the existing **`agent-reach` CLI/package name** for drop-in compatibility
+- 🧠 Keeps the skill compact so agents load routing guidance, not a giant prompt
+- 🧹 Removes China-specific integrations that are outside this fork's scope
+- 🛡️ Preserves the original MIT license and upstream attribution
 
-This is an independent fork. Upstream credit and the original MIT license are preserved.
+## 🚀 Included capabilities
 
-## Included platforms
-
-| Capability | Backend / route |
+| Capability | Preferred backend / route |
 |---|---|
-| Any web page | Jina Reader |
-| Web search | Exa via mcporter |
-| GitHub | GitHub CLI |
-| YouTube | yt-dlp |
-| Twitter / X | twitter-cli, with OpenCLI fallback where available |
-| Reddit | OpenCLI or rdt-cli |
-| Facebook | OpenCLI |
-| Instagram | OpenCLI |
-| LinkedIn | LinkedIn MCP / Jina Reader fallback |
-| RSS / Atom | feedparser |
+| 🌐 Any web page | Jina Reader |
+| 🔎 Web search | Exa via mcporter |
+| 💻 GitHub | GitHub CLI |
+| ▶️ YouTube | yt-dlp |
+| 𝕏 Twitter / X | twitter-cli + OpenCLI fallback |
+| 👽 Reddit | OpenCLI or rdt-cli |
+| 📘 Facebook | OpenCLI |
+| 📸 Instagram | OpenCLI |
+| 💼 LinkedIn | LinkedIn MCP / Jina Reader fallback |
+| 📰 RSS / Atom | feedparser |
 
-The following upstream China-focused integrations are intentionally removed from this edition: **Bilibili, XiaoHongShu, Boss Zhipin, V2EX, Xueqiu, and Xiaoyuzhou Podcast**.
+### Intentionally excluded
 
-## Drop-in compatibility
+This edition does **not** maintain or reinstall:
+
+**Bilibili · XiaoHongShu · Boss Zhipin · V2EX · Xueqiu · Xiaoyuzhou Podcast**
+
+## 🔌 Drop-in compatibility
 
 The Python package name and command remain:
 
@@ -43,16 +51,16 @@ The Python package name and command remain:
 agent-reach
 ```
 
-That is intentional. You do **not** need to rename your existing agent instructions or shell commands when switching from upstream Agent Reach to this fork.
+Existing shell commands and agent workflows do **not** need to be renamed when switching from upstream Agent Reach to this fork.
 
-## Install
+## 📦 Install
 
-### Recommended: pipx
+### Recommended — pipx
 
 ```bash
 pipx install --force https://github.com/Maxei6/Agent-Reach-English/archive/main.zip
 agent-reach skill --install
-agent-reach doctor
+agent-reach doctor --json
 ```
 
 ### pip / virtual environment
@@ -60,64 +68,89 @@ agent-reach doctor
 ```bash
 python -m pip install --upgrade --force-reinstall https://github.com/Maxei6/Agent-Reach-English/archive/main.zip
 agent-reach skill --install
-agent-reach doctor
+agent-reach doctor --json
 ```
 
-> Do not install the unrelated PyPI package merely by name. Install this repository directly from GitHub.
+> ⚠️ Install this repository directly from GitHub. Do not rely on an unrelated PyPI package with the same name.
 
-## Replace the original Agent Reach installation
+## 🔄 Replace or update an existing Agent Reach installation
 
-Give this section to an agent if upstream Agent Reach is already installed.
+The safe migration rule is simple:
 
-1. Detect how `agent-reach` is installed.
-2. Remove the existing Python package without deleting the user's Agent Reach configuration.
-3. Install this repository using the same package manager.
-4. Force-refresh the bundled skill so the agent loads the English-only version.
-5. Run diagnostics.
+> **Replace the package, refresh every known Agent Reach skill location, preserve user config, then verify.**
 
-### If installed with pipx
+Do **not** delete `~/.agent-reach/` unless the user explicitly wants to erase saved configuration and credentials.
+
+### What an agent should audit
+
+Before changing anything, inspect the machine for the active and common Agent Reach installations:
 
 ```bash
-pipx uninstall agent-reach
-pipx install https://github.com/Maxei6/Agent-Reach-English/archive/main.zip
-agent-reach skill --install
-agent-reach doctor
+command -v agent-reach || which agent-reach
+pipx list 2>/dev/null | grep -i agent-reach || true
+python -m pip show agent-reach 2>/dev/null || true
 ```
 
-### If installed with pip / venv
+Also check the known skill roots when they exist:
+
+- `~/.agents/skills/agent-reach`
+- `~/.config/opencode/skills/agent-reach`
+- `~/.openclaw/skills/agent-reach`
+- `~/.claude/skills/agent-reach`
+- `$OPENCLAW_HOME/.openclaw/skills/agent-reach` when `OPENCLAW_HOME` is set
+
+Running:
 
 ```bash
-python -m pip uninstall -y agent-reach
-python -m pip install https://github.com/Maxei6/Agent-Reach-English/archive/main.zip
 agent-reach skill --install
-agent-reach doctor
 ```
 
-Do **not** delete `~/.agent-reach/` during migration unless the user explicitly wants to erase saved configuration and credentials.
+refreshes **all known skill roots that currently exist**. If none exists, Agent Reach creates the default `~/.agents/skills/agent-reach` installation.
 
-## Copy-paste instruction for an AI agent
+### Important limitation
+
+No installer can safely discover every abandoned virtual environment anywhere on a disk. An agent should therefore:
+
+1. replace the **active** `agent-reach` installation;
+2. inspect normal pipx/current-Python locations;
+3. refresh all known skill roots;
+4. report any additional stale installation it can identify instead of deleting unknown environments blindly.
+
+## 🤖 Copy-paste instruction for an AI agent
 
 ```text
-Replace my current upstream Agent Reach installation with the English/international fork:
+Migrate this machine from upstream Agent Reach to the English/international fork:
 https://github.com/Maxei6/Agent-Reach-English
 
-Reason: this fork keeps the Agent Reach capability model but makes the agent-facing skills, documentation, diagnostics, and maintained instructions English-only, while removing China-specific integrations that I do not use.
+Goal:
+Use this fork everywhere Agent Reach is actively configured, while preserving user configuration and credentials.
 
-Requirements:
-1. Detect whether the current agent-reach package is installed with pipx, pip, or inside a virtual environment.
-2. Preserve ~/.agent-reach/ configuration and credentials.
-3. Remove only the currently installed agent-reach Python package.
-4. Install the fork directly from:
+Do this:
+1. Identify the active agent-reach executable and whether it is owned by pipx, pip, or a virtual environment.
+2. Audit common additional installs with pipx and the current Python environment. Do not recursively delete unknown virtual environments.
+3. Preserve ~/.agent-reach/ and all user credentials/configuration.
+4. Remove only the upstream agent-reach Python package from the environment(s) you can positively identify as Agent Reach installations.
+5. Install this fork directly from:
    https://github.com/Maxei6/Agent-Reach-English/archive/main.zip
-   using the same package-management method when practical.
-5. Run: agent-reach skill --install
-   This step is mandatory so the installed skill is replaced by the English-only skill from this fork.
-6. Run: agent-reach doctor --json
-7. Confirm that the active skill and package come from this fork and report any channel that still needs login/setup.
-8. Do not reinstall or restore Bilibili, XiaoHongShu, Boss Zhipin, V2EX, Xueqiu, or Xiaoyuzhou integrations.
+   using the same package-management method where practical.
+6. Run:
+   agent-reach skill --install
+   This is mandatory. It refreshes Agent Reach in every known skill root that already exists.
+7. Check these known skill locations when applicable:
+   ~/.agents/skills/agent-reach
+   ~/.config/opencode/skills/agent-reach
+   ~/.openclaw/skills/agent-reach
+   ~/.claude/skills/agent-reach
+   $OPENCLAW_HOME/.openclaw/skills/agent-reach
+8. Run:
+   agent-reach doctor --json
+9. Verify the installed package/update source and SKILL.md point to:
+   https://github.com/Maxei6/Agent-Reach-English
+10. Do not reinstall or restore Bilibili, XiaoHongShu, Boss Zhipin, V2EX, Xueqiu, or Xiaoyuzhou.
+11. Report any stale Agent Reach installation you found but could not safely identify or replace.
 ```
 
-## Core commands
+## 🧭 Core commands
 
 ```bash
 agent-reach doctor
@@ -125,19 +158,34 @@ agent-reach doctor --json
 agent-reach install --env=auto
 agent-reach skill --install
 agent-reach check-update
+agent-reach watch
 ```
 
 Agent Reach is a capability/router layer rather than a wrapper around every service. After setup, the agent generally calls the selected upstream tool directly.
 
-## Security model
+## 🧠 Agent skill design
+
+The bundled skill is intentionally compact.
+
+It tells an agent:
+
+- when Agent Reach should be used;
+- which capability/backend to route to;
+- when to run Doctor;
+- how to protect credentials;
+- where to read a focused reference when more detail is needed.
+
+Platform-specific detail stays in `agent_reach/skill/references/` instead of bloating the main `SKILL.md`.
+
+## 🔐 Security model
 
 - Credentials remain local in `~/.agent-reach/`.
-- Doctor checks should avoid silently reading browser cookies.
-- Login-backed services should use explicit user-controlled sessions or manually supplied credentials.
-- Use `agent-reach doctor --json` before relying on login-backed platforms.
-- Do not log tokens, cookies, session IDs, or secrets.
+- Doctor checks avoid silently harvesting browser cookies.
+- Login-backed services use explicit user-controlled sessions or manually supplied credentials.
+- Agents should run `agent-reach doctor --json` before relying on login-backed platforms.
+- Tokens, cookies, session IDs, and secrets must never be printed or logged.
 
-## Development
+## 🛠️ Development
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -145,15 +193,12 @@ pytest -q
 ruff check agent_reach tests
 ```
 
-Keep changes modular: one channel per file, health checks through the channel registry, and agent instructions in `agent_reach/skill/`.
+Keep changes modular: one channel per file, health checks through the channel registry, and concise routing instructions in `agent_reach/skill/`.
 
-## Upstream and license
+## 🧬 Upstream & license
 
-This project is derived from [Panniantong/Agent-Reach](https://github.com/Panniantong/Agent-Reach).
+This project is derived from **[Panniantong/Agent-Reach](https://github.com/Panniantong/Agent-Reach)**.
 
-The upstream code is distributed under the **MIT License**. This fork keeps the original license and copyright notice as required by MIT. See [LICENSE](LICENSE).
+The upstream code is distributed under the **MIT License**. This fork preserves the original copyright and license notice in [LICENSE](LICENSE).
 
-MIT permits use, modification, distribution, sublicensing, and commercial use, provided the copyright and license notice are retained in copies or substantial portions of the software.
-
-
-<!-- CI trigger after enabling GitHub Actions -->
+MIT permits use, modification, distribution, sublicensing, and commercial use provided the copyright and license notice are retained in copies or substantial portions of the software.
