@@ -4,7 +4,7 @@
 
 # 🌐 Agent Reach — English / International Edition
 
-> **Give your AI agent reliable eyes on the public internet.**  
+> **Give your AI agent reliable eyes on the public internet.**
 > Search, read, route, and health-check global web sources with one lightweight capability layer.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
