@@ -43,18 +43,20 @@ def test_removed_channel_modules_do_not_exist():
     assert not ({path.name for path in channel_dir.glob("*.py")} & REMOVED_MODULES)
 
 
-def test_agent_package_contains_no_cjk_instruction_text():
+def test_repository_contains_no_cjk_instruction_text():
     cjk = re.compile(r"[\u3400-\u9fff]")
     offenders = []
 
-    for path in PACKAGE.rglob("*"):
-        if not path.is_file() or path.suffix not in {".py", ".md", ".txt", ".json", ".sh"}:
+    for path in ROOT.rglob("*"):
+        if not path.is_file() or path.suffix not in {".py", ".md", ".txt", ".json", ".sh", ".yml", ".yaml", ".toml"}:
+            continue
+        if any(part in {".git", ".venv", "venv", "dist", "build"} for part in path.parts):
             continue
         text = path.read_text(encoding="utf-8")
         if cjk.search(text):
             offenders.append(str(path.relative_to(ROOT)))
 
-    assert offenders == [], f"CJK text remains in agent package: {offenders}"
+    assert offenders == [], f"CJK text remains in repository text files: {offenders}"
 
 
 def test_bundled_mcporter_config_contains_only_exa():

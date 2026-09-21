@@ -832,7 +832,7 @@ class TestMediaGenerationBudget:
 
 
 class TestSubprocessDecoding:
-    CJK_BYTES = "中文标题".encode("utf-8")
+    CJK_BYTES = bytes.fromhex("e4b8ade69687e6a087e9a298")
 
     def _decoding_run(self, returncode: int):
         def fake_run(cmd, **kwargs):
