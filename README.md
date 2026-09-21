@@ -1,4 +1,4 @@
-<p align="center">\n  <img src="docs/assets/agent-reach-social-preview.svg" alt="Agent Reach — English / International Edition" width="100%">\n</p>\n\n# 🌐 Agent Reach — English / International Edition
+<p align="center">\n  <img src="docs/assets/agent-reach-social-preview.png" alt="Agent Reach — English / International Edition" width="100%">\n</p>\n\n# 🌐 Agent Reach — English / International Edition
 
 > **Give your AI agent reliable eyes on the public internet.**  
 > Search, read, route, and health-check global web sources with one lightweight capability layer.
