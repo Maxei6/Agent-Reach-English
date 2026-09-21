@@ -27,7 +27,7 @@ def _frontmatter(resource_name: str) -> dict[str, object]:
 
 
 def test_skill_frontmatter_uses_opencode_supported_fields():
-    """Both locale variants must follow OpenCode's documented schema."""
+    """The bundled English skill must follow OpenCode's documented schema."""
     allowed_fields = {
         "name",
         "description",
@@ -36,21 +36,21 @@ def test_skill_frontmatter_uses_opencode_supported_fields():
         "metadata",
     }
 
-    for resource_name in ("SKILL.md", "SKILL_en.md"):
-        frontmatter = _frontmatter(resource_name)
-        assert set(frontmatter) <= allowed_fields, resource_name
-        assert frontmatter["name"] == "agent-reach", resource_name
+    resource_name = "SKILL.md"
+    frontmatter = _frontmatter(resource_name)
+    assert set(frontmatter) <= allowed_fields
+    assert frontmatter["name"] == "agent-reach"
 
-        description = frontmatter["description"]
-        assert isinstance(description, str), resource_name
-        assert 1 <= len(description) <= 1024, resource_name
+    description = frontmatter["description"]
+    assert isinstance(description, str)
+    assert 1 <= len(description) <= 1024
 
-        metadata = frontmatter.get("metadata", {})
-        assert isinstance(metadata, dict), resource_name
-        assert all(
-            isinstance(key, str) and isinstance(value, str)
-            for key, value in metadata.items()
-        ), resource_name
+    metadata = frontmatter.get("metadata", {})
+    assert isinstance(metadata, dict)
+    assert all(
+        isinstance(key, str) and isinstance(value, str)
+        for key, value in metadata.items()
+    )
 
 
 def test_install_skill_discovers_opencode_global_directory(tmp_path: Path):

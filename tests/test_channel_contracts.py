@@ -49,7 +49,7 @@ def test_channel_active_backend_set_by_check(monkeypatch, tmp_path):
     """After check(), active_backend is None or a str — never anything else."""
     monkeypatch.setattr("shutil.which", lambda _cmd: None)
 
-    # Keep the network-based channels (V2EX/Xueqiu/Bilibili API) deterministic.
+    # Keep network-based channels deterministic.
     import urllib.request
     from urllib.error import URLError
 
@@ -57,10 +57,6 @@ def test_channel_active_backend_set_by_check(monkeypatch, tmp_path):
         raise URLError("offline")
 
     monkeypatch.setattr(urllib.request, "urlopen", _no_net)
-    import agent_reach.channels.xueqiu as xueqiu_mod
-    monkeypatch.setattr(xueqiu_mod, "_cookies_initialized", True)
-    monkeypatch.setattr(xueqiu_mod._opener, "open", _no_net)
-
     config = Config(config_path=tmp_path / "config.yaml")
     for ch in get_all_channels():
         ch.check(config)
@@ -117,7 +113,7 @@ def test_youtube_warns_when_node_only_and_no_config(monkeypatch, tmp_path):
     status, message = ch.check()
     assert status == "warn"
     assert "--js-runtimes" in message
-    assert ch.active_backend == "yt-dlp"  # 本体活着，warn 只关乎 JS runtime
+    assert ch.active_backend == "yt-dlp"  # Backend works; warning only concerns JS runtime.
 
 
 def test_youtube_warns_with_windows_specific_fix_command(monkeypatch, tmp_path):
@@ -171,11 +167,8 @@ def test_channel_can_handle_contract():
         "reddit": "https://reddit.com/r/python",
         "facebook": "https://www.facebook.com/zuck",
         "instagram": "https://www.instagram.com/openai/",
-        "bilibili": "https://www.bilibili.com/video/BV1xx411",
-        "xiaohongshu": "https://www.xiaohongshu.com/explore/123",
         "linkedin": "https://www.linkedin.com/in/test",
         "rss": "https://example.com/feed.xml",
-        "xueqiu": "https://xueqiu.com/S/SH600519",
         "exa_search": "https://example.com",
         "web": "https://example.com",
     }

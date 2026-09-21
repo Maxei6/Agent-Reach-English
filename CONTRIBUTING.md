@@ -1,107 +1,44 @@
-# Contributing to Agent Reach
+# Contributing to Agent Reach — English / International Edition
 
-Thank you for your interest in contributing to Agent Reach! This document provides guidelines and instructions for contributing.
+This repository is an English-only international derivative of Agent Reach.
 
-## Getting Started
+## Scope
 
-1. Fork the repository on GitHub
-2. Clone your fork locally
-3. Create a new branch for your contribution
-4. Make your changes
-5. Run tests and linting
-6. Submit a pull request
+Changes should preserve the upstream capability-router architecture while keeping the fork focused on broadly useful international platforms.
 
-## Development Setup
+Do not reintroduce Bilibili, XiaoHongShu, Boss Zhipin, V2EX, Xueqiu, or Xiaoyuzhou into this edition.
+
+All maintained code comments, user-facing strings, tests, documentation, and agent skill instructions should be in English.
+
+## Development setup
 
 ```bash
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/Agent-Reach.git
-cd Agent-Reach
-
-# Install in development mode
-pip install -e ".[dev]"
-
-# Install pre-commit hooks (optional but recommended)
-pre-commit install
+git clone https://github.com/Maxei6/Agent-Reach-English.git
+cd Agent-Reach-English
+python -m pip install -e ".[dev]"
 ```
 
-## Code Style
-
-We use the following tools to maintain code quality:
-
-- **ruff**: Linting and import sorting
-- **mypy**: Type checking
-- **pytest**: Testing
-
-Run all checks before submitting a PR:
+## Checks
 
 ```bash
-# Linting
 ruff check agent_reach tests
-ruff format agent_reach tests
-
-# Type checking
 mypy agent_reach
-
-# Tests
 pytest
 ```
 
-## Adding New Channels
+## Adding or changing a channel
 
-Agent Reach uses a unified channel interface. To add a new platform:
+1. Keep one platform per file in `agent_reach/channels/`.
+2. Follow the existing channel contract.
+3. Add or update tests.
+4. Register the channel in `agent_reach/channels/__init__.py`.
+5. Update the English skill/docs.
+6. Avoid hidden credential reads and never log secrets.
 
-1. Create a new file in `agent_reach/channels/`
-2. Implement the channel contract (see existing channels for examples)
-3. Add tests in `tests/test_channels.py`
-4. Update `agent_reach/doctor.py` to include the new channel
-5. Update documentation
+## Pull requests
 
-## Pull Request Guidelines
+Use a branch, keep changes focused, and run the test suite before proposing the PR.
 
-- **Small, focused changes** are preferred over large refactors
-- Include tests for new functionality
-- Update documentation if needed
-- Follow existing code style
-- Reference any related issues
+## Upstream
 
-## Reporting Issues
-
-When reporting bugs, please include:
-
-- Python version
-- Operating system
-- Steps to reproduce
-- Expected vs actual behavior
-- Any error messages
-
-## Questions?
-
-Feel free to open an issue for questions or join discussions.
-
----
-
-感谢您对 Agent Reach 的贡献！本文档提供了贡献指南。
-
-## 快速开始
-
-1. 在 GitHub 上 fork 仓库
-2. 本地 clone 您的 fork
-3. 创建新分支
-4. 提交更改
-5. 运行测试和 lint
-6. 提交 pull request
-
-## 代码规范
-
-- 使用 **ruff** 进行代码检查
-- 使用 **mypy** 进行类型检查
-- 使用 **pytest** 运行测试
-
-## 添加新渠道
-
-1. 在 `agent_reach/channels/` 创建新文件
-2. 实现渠道接口
-3. 添加测试
-4. 更新 doctor 检测
-5. 更新文档
+This fork is derived from https://github.com/Panniantong/Agent-Reach and remains under the MIT license. Preserve the existing LICENSE file and upstream copyright notice.

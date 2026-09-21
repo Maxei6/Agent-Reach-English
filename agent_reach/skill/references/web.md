@@ -1,50 +1,26 @@
-# 网页阅读
+# Web pages and RSS
 
-通用网页、RSS。
+## Normal web pages
 
-## 通用网页 (Jina Reader)
+Use Jina Reader for readable Markdown:
 
 ```bash
-# 读取任意网页内容
 curl -s "https://r.jina.ai/URL"
-
-# 示例
-curl -s "https://r.jina.ai/https://example.com/article"
 ```
 
-**适用场景**: 大多数网页可以直接用 Jina Reader 读取。
+If Jina returns an anti-bot/interstitial page instead of the target content,
+use a site-specific retained tool or a user-controlled browser path rather than
+pretending the page was read successfully.
 
-## Web Reader (MCP)
+## RSS / Atom
+
+Use Python `feedparser` or the existing Agent Reach RSS channel.
+
+Check availability:
 
 ```bash
-# 读取网页内容 (Markdown 格式)
-mcporter call web-reader.webReader url="https://example.com"
-
-# 保留图片
-mcporter call web-reader.webReader url="https://example.com" retain_images=true
-
-# 纯文本格式
-mcporter call web-reader.webReader url="https://example.com" return_format="text"
+agent-reach doctor --json
 ```
 
-**适用场景**: 需要更精确控制输出格式时使用。
-
-## RSS (feedparser)
-
-```python
-python3 -c "
-import feedparser
-for e in feedparser.parse('FEED_URL').entries[:5]:
-    print(f'{e.title} — {e.link}')
-"
-```
-
-**适用场景**: 订阅博客、新闻源、播客等 RSS feed。
-
-## 选择指南
-
-| 场景 | 推荐工具 |
-|-----|---------|
-| 通用网页 | Jina Reader (`curl r.jina.ai`) |
-| 需要图片/格式控制 | web-reader MCP |
-| RSS 订阅 | feedparser |
+Preserve feed titles, item URLs, publication dates, and ordering when those
+fields are available.

@@ -1,32 +1,47 @@
-# Agent Reach
+# Agent Reach — English / International Edition
 
-> Give your AI agent eyes to see the internet. Agent Reach installs, routes, and health-checks upstream tools for 15 platforms — Twitter/X, Reddit, Facebook, Instagram, YouTube, GitHub, Bilibili, XiaoHongShu, LinkedIn, V2EX, Xueqiu, Xiaoyuzhou Podcast, RSS, web search, and any web page. One install, zero API fees.
+> English-first capability router for AI agents. This fork retains the Agent Reach architecture while removing China-specific integrations and keeping all agent-facing instructions in English.
 
-## Quick Start
+## Repository
 
-- [Installation Guide](https://github.com/Panniantong/Agent-Reach/blob/main/docs/install.md): Step-by-step setup instructions for AI agents
-- [README (中文)](https://github.com/Panniantong/Agent-Reach/blob/main/README.md): Full documentation in Chinese
-- [README (English)](https://github.com/Panniantong/Agent-Reach/blob/main/docs/README_en.md): Full documentation in English
+https://github.com/Maxei6/Agent-Reach-English
 
-## Core Commands
+## Why this fork exists
 
-- [CLI Usage](https://github.com/Panniantong/Agent-Reach/blob/main/docs/install.md): `agent-reach doctor --json` shows the active backend; agents then call upstream tools directly (`opencli`, `twitter`, `bili`, `yt-dlp`, `gh`, `mcporter`, etc.).
+The upstream Agent Reach project includes Chinese skill text, diagnostics, and documentation. AI agents often load those files directly into context. This fork keeps the same capability model and `agent-reach` CLI but uses English-only agent instructions and removes China-specific channels.
 
-## Key Features
+## Retained capabilities
 
-- Read any URL: tweets, Reddit posts, Facebook pages/feed/groups, Instagram profiles/posts, YouTube videos (transcripts), GitHub repos, articles, XiaoHongShu notes, Bilibili videos, RSS feeds
-- Search/discover across platforms: Twitter/X, Reddit, Facebook, Instagram user search, GitHub, YouTube, Bilibili, XiaoHongShu, LinkedIn, V2EX, Xueqiu, Web (via Exa)
-- Self-diagnosis: `agent-reach doctor` checks what works and what needs setup
-- Auto-installs dependencies: `agent-reach install --env=auto`
-- Browser-session / cookie auth for platforms that require login (Twitter, Reddit, Facebook, Instagram, XiaoHongShu, Xueqiu)
-- Proxy support for platforms that block server IPs (Reddit, Twitter)
-- Zero API fees: all backends are free and open-source (OpenCLI, twitter-cli, rdt-cli, bili-cli, yt-dlp, Jina Reader, mcporter/Exa, etc.)
+- Any web page via Jina Reader
+- Web search via Exa / mcporter
+- GitHub via gh CLI
+- YouTube via yt-dlp
+- Twitter/X
+- Reddit
+- Facebook
+- Instagram
+- LinkedIn
+- RSS / Atom
 
-## Troubleshooting
+## Removed from this edition
 
-- [Troubleshooting Guide](https://github.com/Panniantong/Agent-Reach/blob/main/docs/troubleshooting.md): Common issues and solutions
+Bilibili, XiaoHongShu, Boss Zhipin, V2EX, Xueqiu, Xiaoyuzhou Podcast.
 
-## Optional
+## Core commands
 
-- [SKILL.md](https://github.com/Panniantong/Agent-Reach/blob/main/agent_reach/skill/SKILL.md): Integration guide for AI agent frameworks (OpenClaw, Claude Code, etc.)
-- [PyPI Package](https://pypi.org/project/agent-reach/): `pip install agent-reach`
+- `agent-reach doctor --json`
+- `agent-reach install --env=auto`
+- `agent-reach skill --install`
+- `agent-reach check-update`
+
+## Agent installation
+
+Install directly from GitHub:
+
+`pipx install --force https://github.com/Maxei6/Agent-Reach-English/archive/main.zip`
+
+Then refresh the skill:
+
+`agent-reach skill --install`
+
+See README.md and docs/install.md for migration details.
