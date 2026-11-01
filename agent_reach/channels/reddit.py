@@ -100,7 +100,7 @@ class RedditChannel(Channel):
             )
         except PrivatePathError as exc:
             return "warn", (
-                f"rdt-cli is installed, but credential.json cannot be read safely: {exc}。"
+                f"rdt-cli is installed, but credential.json cannot be read safely: {exc}."
             )
         except OSError:
             return "warn", (
@@ -143,7 +143,7 @@ class RedditChannel(Channel):
             "     https://chromewebstore.google.com/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm\n"
             "  2. Open reddit.com in the browser and make sure you are logged in\n"
             "  3. Open Cookie-Editor, find `reddit_session`, and copy its Value\n"
-            f"  4. Write the following content to {_CREDENTIAL_FILE}：\n"
+            f"  4. Write the following content to {_CREDENTIAL_FILE}:\n"
             '     {"cookies": {"reddit_session": "<paste Value>"}, '
             '"source": "manual", "username": "<your username>", '
             '"modhash": null, "saved_at": 0, "last_verified_at": null}\n\n'
