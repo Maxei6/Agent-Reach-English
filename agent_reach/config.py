@@ -15,6 +15,7 @@ import yaml
 
 from agent_reach.utils.paths import (
     PrivatePathError,
+    _replace_private_file,
     ensure_no_symlink_path,
     home_dir,
     make_private_dir,
@@ -74,7 +75,7 @@ def _atomic_write_yaml(target: Path, data: dict) -> None:
         # A later race is still safe: os.replace replaces a directory entry and
         # never follows the symlink into its target.
         _reject_symlink(target, "config file")
-        os.replace(tmp_path, target)
+        _replace_private_file(tmp_path, target)
         if os.name != "nt":
             os.chmod(target, stat.S_IRUSR | stat.S_IWUSR)
 
