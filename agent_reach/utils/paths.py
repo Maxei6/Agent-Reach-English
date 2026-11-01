@@ -7,6 +7,7 @@ import shlex
 import stat
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 
@@ -68,6 +69,18 @@ def make_private_dir(path: str | Path) -> Path:
     return target
 
 
+def _replace_private_file(src: Path, dst: Path) -> None:
+    """Retry atomic replacement briefly on Windows when another process holds the target."""
+    for attempt in range(20):
+        try:
+            os.replace(src, dst)
+            return
+        except PermissionError:
+            if sys.platform != "win32" or attempt == 19:
+                raise
+            time.sleep(0.05)
+
+
 def atomic_write_private_text(
     path: str | Path,
     text: str,
@@ -106,7 +119,7 @@ def atomic_write_private_text(
 
         ensure_no_symlink_path(parent, "parent directory")
         ensure_no_symlink_path(target, "target file")
-        os.replace(tmp_path, target)
+        _replace_private_file(tmp_path, target)
 
         if os.name != "nt" and hasattr(os, "O_DIRECTORY"):
             try:
