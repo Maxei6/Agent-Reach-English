@@ -16,6 +16,7 @@ import sys
 import time
 
 from agent_reach import __version__
+from agent_reach.utils.process import install_subprocess_env
 
 # Pinned to the 0.4.2 state — PyPI still only has 0.4.1 (upstream issue #10).
 _RDT_GIT_SOURCE = "git+https://github.com/public-clis/rdt-cli.git@5e4fb3720d5c174e976cd425ccc3b879d52cac66"
@@ -708,6 +709,7 @@ def _install_system_deps():
                         encoding="utf-8",
                         errors="replace",
                         timeout=60,
+                        env=install_subprocess_env(),
                     )
                     if result.returncode == 0:
                         print("  ✅ undici installed (Node.js proxy support)")
@@ -825,7 +827,7 @@ def _install_twitter_deps():
             try:
                 result = subprocess.run(
                     [tool_cmd, *args], capture_output=True, encoding="utf-8",
-                    errors="replace", timeout=120,
+                    errors="replace", timeout=120, env=install_subprocess_env(),
                 )
                 if result.returncode == 0 and shutil.which("twitter"):
                     print("  ✅ twitter-cli installed")
@@ -872,6 +874,7 @@ def _install_opencli_deps():
         install_result = subprocess.run(
             [npm_cmd, "install", "-g", OPENCLI_PACKAGE],
             capture_output=True, encoding="utf-8", errors="replace", timeout=300,
+            env=install_subprocess_env(),
         )
     except (OSError, subprocess.TimeoutExpired):
         install_result = None
@@ -929,7 +932,7 @@ def _install_rdt_cli():
             try:
                 result = subprocess.run(
                     [tool_cmd, *args], capture_output=True, encoding="utf-8",
-                    errors="replace", timeout=120,
+                    errors="replace", timeout=120, env=install_subprocess_env(),
                 )
                 if result.returncode == 0 and shutil.which("rdt"):
                     print("  ✅ rdt-cli installed")
@@ -1014,6 +1017,7 @@ def _install_mcporter():
             install_result = subprocess.run(
                 [npm_cmd, "install", "-g", "mcporter"],
                 capture_output=True, encoding="utf-8", errors="replace", timeout=120,
+                env=install_subprocess_env(),
             )
             mcporter_cmd = shutil.which("mcporter")
             if install_result.returncode == 0 and mcporter_cmd:
